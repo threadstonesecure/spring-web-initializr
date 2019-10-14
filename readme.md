@@ -64,7 +64,9 @@ _Maven_
 ```
 In this simplified example the ResourcePersistable will be the User entity and we will reuse the same class for ResourcePersistableForm and ResourcePersistableSearchForm. 
 
-_ResourcePersistable_ (Getters/Setters omitted)
+<details>
+    <summary>ResourcePersistable (Getters/Setters omitted)</summary>
+
 ```java
 @Entity(name = "user")
 public class User implements ResourcePersistable<Long> {
@@ -90,8 +92,11 @@ public class User implements ResourcePersistable<Long> {
 
 }
 ```
+</details>
 
-_ResourcePersistableCrudRepository_
+<details>
+    <summary>ResourcePersistableCrudRepository</summary>
+
 ```java
 @Repository
 public interface UserResourcePersistableRepository extends CrudRepository<User, Long> {}
@@ -112,8 +117,11 @@ public class UserResourcePersistableService extends ResourcePersistableService<U
 
 }
 ```
+</details>
 
-_ResourcePersistableController_
+<details>
+    <summary>ResourcePersistableController</summary>
+
 ```java
 @Controller
 public class UserResourcePersistableController extends ResourcePersistableController<User, Long, User, User> {
@@ -199,6 +207,7 @@ public class UserResourcePersistableController extends ResourcePersistableContro
 
 }
 ```
+</details>
 
 Contributing
 ------------
