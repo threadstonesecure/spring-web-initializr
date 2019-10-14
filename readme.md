@@ -7,9 +7,9 @@ Spring Web Initializr
 [![spring-boot-2.0.0.RELEASE][shield-spring]](#)
 [![MIT licensed][shield-license]](#)
 
-Spring Web Initializr _(will be referenced Swi from now on)_ is a library that will help you easily create Web Apps with Spring Boot.  
-It was mainly developed in order to support the [Swip (Spring Web Initializr Plugin)](https://plugins.jetbrains.com/plugin/12239-swip-spring-web-initializr-) built for IntelliJ IDEA, but can be obviously used independently.
-However, you will understand better the usage and the purpose of the library, if you choose to use the Swip first.
+Spring Web Initializr _(will be referenced SWI from now on)_ is a library that will help you easily create Web Apps with Spring Boot.  
+It was mainly developed in order to support [Swip (Spring Web Initializr Plugin)](https://plugins.jetbrains.com/plugin/12239-swip-spring-web-initializr-) built for IntelliJ IDEA, but can be obviously used independently.
+However, you will better understand the usage and the purpose of the library, if you choose to use Swip first.
 
 Table of Contents
 -----------------
@@ -21,33 +21,33 @@ Table of Contents
 Description
 -----------
 
-Swi is essentially providing interfaces/abstract classes that contain the base logic for the Create, Read, Update & Delete  operations of the ResourcePersistable Entity.  
-It is taken for granted, that the user of the library is going to user a template engine, but there is no restriction to which one.
+SWI is essentially providing interfaces/abstract classes that contain the base logic for the Create, Read, Update & Delete  operations of the ResourcePersistable entity.  
+It is assumed, that the user of the library is going to use a template engine, but there is no restriction as to which one.
 
 _ResourcePersistable<ID>_
-* Meant to be implemented by an Entity of your application (e.g. User, Vehicle, etc...)  
-* **ID** stands for the class of the field representing the primary key of the Entity (e.g. Long)
-* There is only a single method to be implemented, which obviously should be returning the primary key field  
+* Meant to be implemented by an entity of your application (e.g. User)  
+* **ID** stands for the class of the field representing the primary key of the ResourcePersistable entity (e.g. Long)
+* There is only a single method to be implemented, which should be returning the primary key field  
     ```
     ID getResourcePersistableId();
     ```
 
 _ResourcePersistableController<R extends ResourcePersistable<ID>, ID extends Serializable, RF, RSF>_
-* Meant to be extended by the Spring @Controller for the corresponding ResourcePersistable entity (e.g. UserController, VehicleController, etc...)
-* **R extends ResourcePersistable<ID>** stands for the class ResourcePersistableEntity (e.g. User, Vehicle, etc...)
-* **ID extends Serializable** stands for the class of the field representing the primary key of the Entity (e.g. Long)
-* **RF** stands for the class of the ResourcePersistableForm, that should contain all the fields required in order to create a ResourcePersistable (e.g. UserForm, VehicleForm)
-  * Might as well be the class of the ResourcePersistable itself
-* **RSF** stands for the class of the ResourcePersistableSearchForm, that should contain all the fields in order to search for a ResourcePersistable (e.g. UserSearchForm, VehicleSearchForm)
-  * Might as well be the class of the ResourcePersistable itself
-* The methods that should be implemented are the ones that provide the endpoint & the resources paths as well as the transformation methods from a ResourcePersistable to a ResourcePersistableForm and vice versa.
+* Meant to be extended by the Spring @Controller for the corresponding ResourcePersistable entity (e.g. UserController)
+* **R extends ResourcePersistable<ID>** stands for the ResourcePersistable (e.g. User)
+* **ID extends Serializable** stands for the class of the field representing the primary key of the entity (e.g. Long)
+* **RF** stands for the ResourcePersistableForm, that should contain all the fields required in order to create a ResourcePersistable (e.g. UserForm)
+  * Might as well be the ResourcePersistable itself
+* **RSF** stands for the ResourcePersistableSearchForm, that should contain all the fields in order to search for a ResourcePersistable (e.g. UserSearchForm)
+  * Might as well be the ResourcePersistable itself
+* The methods that should be implemented are the ones that provide the endpoints & the resources' paths, as well as the transformation methods from a ResourcePersistable to a ResourcePersistableForm and vice versa
   
 _ResourcePersistableService<R extends ResourcePersistable<ID>, ID extends Serializable, RSF>_
-* Meant to be extended by the Spring @Service for the corresponding ResourcePersistable entity (e.g. UserService, VehicleService, etc...)
-* **R extends ResourcePersistable<ID>** stands for the class ResourcePersistableEntity (e.g. User, Vehicle, etc...)
-* **ID extends Serializable** stands for the class of the field representing the primary key of the Entity (e.g. Long)
-* **RSF** stands for the class of the ResourcePersistableSearchForm, that should contain all the fields in order to search for a ResourcePersistable (e.g. UserSearchForm, VehicleSearchForm)
-  * Might as well be the class of the ResourcePersistable itself  
+* Meant to be extended by the Spring @Service for the corresponding ResourcePersistable (e.g. UserService)
+* **R extends ResourcePersistable<ID>** stands for the ResourcePersistable (e.g. User)
+* **ID extends Serializable** stands for the class of the field representing the primary key of the entity (e.g. Long)
+* **RSF** stands for the ResourcePersistableSearchForm, that should contain all the fields in order to search for a ResourcePersistable (e.g. UserSearchForm)
+  * Might as well be the ResourcePersistable itself  
 
 
 Example
@@ -62,7 +62,7 @@ _Maven_
     <version>3.0.0</version>
 </dependency>
 ```
-In this simplified example the ResourcePersistable will be the User Entity and we will reuse the same class for ResourcePersistableForm and ResourcePersistableSearchForm. 
+In this simplified example the ResourcePersistable will be the User entity and we will reuse the same class for ResourcePersistableForm and ResourcePersistableSearchForm. 
 
 _ResourcePersistable_ (Getters/Setters omitted)
 ```java
@@ -94,7 +94,7 @@ public class User implements ResourcePersistable<Long> {
 _ResourcePersistableCrudRepository_
 ```java
 @Repository
-public interface UserResourcePersistableRepository extends CrudRepository<User, Long> { }
+public interface UserResourcePersistableRepository extends CrudRepository<User, Long> {}
 ```
 
 _ResourcePersistableService_
