@@ -7,7 +7,7 @@ Spring Web Initializr
 [![spring-boot-2.0.0.RELEASE][shield-spring]](#)
 [![MIT licensed][shield-license]](#)
 
-Spring Web Initializr _(will be referenced SWI from now on)_ is a library that will help you easily create Web Apps with Spring Boot.  
+Spring Web Initializr _(will be refered to as SWI from now on)_ is a library that will help you easily create Web Apps with Spring Boot.  
 It was mainly developed in order to support [Swip (Spring Web Initializr Plugin)](https://plugins.jetbrains.com/plugin/12239-swip-spring-web-initializr-) built for IntelliJ IDEA, but can be obviously used independently.
 However, you will better understand the usage and the purpose of the library, if you choose to use Swip first.
 
@@ -95,14 +95,17 @@ public class User implements ResourcePersistable<Long> {
 </details>
 
 <details>
-    <summary>ResourcePersistableCrudRepository</summary>
+    <summary>ResourcePersistableRepository</summary>
 
 ```java
 @Repository
 public interface UserResourcePersistableRepository extends CrudRepository<User, Long> {}
 ```
+</details>
 
-_ResourcePersistableService_
+<details>
+    <summary>ResourcePersistableService</summary>
+
 ```java
 @Service
 public class UserResourcePersistableService extends ResourcePersistableService<User, Long, User> {
