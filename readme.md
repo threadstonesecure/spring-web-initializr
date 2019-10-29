@@ -7,7 +7,7 @@ Spring Web Initializr
 [![spring-boot-2.0.0.RELEASE][shield-spring]](#)
 [![MIT licensed][shield-license]](#)
 
-Spring Web Initializr _(will be referred to as SWI from now on)_ is a library that will help you easily create Web Apps with Spring Boot.  
+Spring Web Initializr _(will be referred to as **SWI** from now on)_ is a library that will help you easily create Web Apps with Spring Boot.  
 It was mainly developed in order to support [Swip (Spring Web Initializr Plugin)](https://plugins.jetbrains.com/plugin/12239-swip-spring-web-initializr-) built for IntelliJ IDEA, but can be obviously used independently.
 However, you will better understand the usage and the purpose of the library, if you choose to use Swip first.
 
@@ -21,32 +21,32 @@ Table of Contents
 Description
 -----------
 
-SWI is essentially providing interfaces/abstract classes that contain the base logic for the Create, Read, Update & Delete  operations of the ResourcePersistable entity.  
-It is assumed, that the user of the library is going to use a template engine, but there is no restriction as to which one.
+SWI is providing interfaces or abstract classes that contain the base logic for the Create, Read, Update & Delete  operations of a ResourcePersistable.  
+It is assumed, that the user of the library is going to use a template engine compatible with Spring, but there is no restriction as to which one.
 
-_ResourcePersistable<ID>_
-* Meant to be implemented by an entity of your application (e.g. User)  
+_ResourcePersistable\<ID\>_
+* Meant to be implemented by a JPA @Entity (e.g. User)  
 * **ID** stands for the class of the field representing the primary key of the ResourcePersistable entity (e.g. Long)
 * There is only a single method to be implemented, which should be returning the primary key field  
     ```
     ID getResourcePersistableId();
     ```
 
-_ResourcePersistableController<R extends ResourcePersistable<ID>, ID extends Serializable, RF, RSF>_
+_ResourcePersistableController\<R extends ResourcePersistable\<ID\>, ID extends Serializable, RF, RSF\>_
 * Meant to be extended by the Spring @Controller for the corresponding ResourcePersistable entity (e.g. UserController)
-* **R extends ResourcePersistable<ID>** stands for the ResourcePersistable (e.g. User)
+* **R extends ResourcePersistable\<ID\>** stands for the ResourcePersistable (e.g. User)
 * **ID extends Serializable** stands for the class of the field representing the primary key of the entity (e.g. Long)
-* **RF** stands for the ResourcePersistableForm, that should contain all the fields required in order to create a ResourcePersistable (e.g. UserForm)
+* **RF** stands for the ResourcePersistableForm, a class that should contain all the fields required in order to create a ResourcePersistable (e.g. UserForm)
   * Might as well be the ResourcePersistable itself
 * **RSF** stands for the ResourcePersistableSearchForm, that should contain all the fields in order to search for a ResourcePersistable (e.g. UserSearchForm)
   * Might as well be the ResourcePersistable itself
 * The methods that should be implemented are the ones that provide the endpoints & the resources' paths, as well as the transformation methods from a ResourcePersistable to a ResourcePersistableForm and vice versa
   
-_ResourcePersistableService<R extends ResourcePersistable<ID>, ID extends Serializable, RSF>_
+_ResourcePersistableService\<R extends ResourcePersistable\<ID\>, ID extends Serializable, RSF\>_
 * Meant to be extended by the Spring @Service for the corresponding ResourcePersistable (e.g. UserService)
-* **R extends ResourcePersistable<ID>** stands for the ResourcePersistable (e.g. User)
+* **R extends ResourcePersistable\<ID\>** stands for the ResourcePersistable (e.g. User)
 * **ID extends Serializable** stands for the class of the field representing the primary key of the entity (e.g. Long)
-* **RSF** stands for the ResourcePersistableSearchForm, that should contain all the fields in order to search for a ResourcePersistable (e.g. UserSearchForm)
+* **RSF** stands for the ResourcePersistableSearchForm, a class that should contain all the fields in order to search for a ResourcePersistable (e.g. UserSearchForm)
   * Might as well be the ResourcePersistable itself  
 
 
@@ -62,10 +62,82 @@ _Maven_
     <version>3.0.0</version>
 </dependency>
 ```
+
 In this simplified example the ResourcePersistable will be the User entity and we will reuse the same class for ResourcePersistableForm and ResourcePersistableSearchForm. 
 
 <details>
-    <summary>ResourcePersistable (Getters/Setters omitted)</summary>
+    <summary>pom.xml</summary>
+ 
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>2.1.6.RELEASE</version>
+        <relativePath/> <!-- lookup parent from repository -->
+    </parent>
+
+    <groupId>ore.plugins.swi</groupId>
+    <artifactId>swi-demo</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>swi-demo</name>
+    <description>Demo project for Spring Web Initializr</description>
+
+    <properties>
+        <java.version>1.8</java.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-freemarker</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.orpolyzos</groupId>
+            <artifactId>spring-web-initializr</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
+```
+</details>
+
+<details>
+    <summary>ResourcePersistable</summary>
 
 ```java
 @Entity(name = "user")
@@ -84,12 +156,44 @@ public class User implements ResourcePersistable<Long> {
 
     @Column(name = "email", nullable = false, unique = true)
     private String email;
-    
+
+
     @Override
     public Long getResourcePersistableId() {
+        return this.id;
+    }
+
+    public Long getId() {
         return id;
     }
 
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
 }
 ```
 </details>
@@ -117,7 +221,6 @@ public class UserResourcePersistableService extends ResourcePersistableService<U
         super(userResourcePersistableRepository);
         this.userResourcePersistableRepository = userResourcePersistableRepository;
     }
-
 }
 ```
 </details>
@@ -128,14 +231,7 @@ public class UserResourcePersistableService extends ResourcePersistableService<U
 ```java
 @Controller
 public class UserResourcePersistableController extends ResourcePersistableController<User, Long, User, User> {
-    
-    private static final String RESOURCE_PERSISTABLE_BASE_URI = "/users";
-    private static final String RESOURCE_PERSISTABLE_BASE_VIEW_PATH = "/user/users";
-    private static final String RESOURCE_PERSISTABLE_EDIT_VIEW_PATH = "/user/edit-user";
-    private static final String RESOURCE_PERSISTABLE_FORM_HOLDER = "userForm";
-    private static final String RESOURCE_PERSISTABLE_SEARCH_FORM_HOLDER = "userSearchForm";
-    private static final String RESOURCE_PERSISTABLE_LIST_HOLDER = "userList";
-    
+      
     private final ResourcePersistableService<User, Long, User> userResourcePersistableService;
 
     @Autowired
@@ -145,32 +241,14 @@ public class UserResourcePersistableController extends ResourcePersistableContro
     }
 
     @Override
-    protected String getResourcePersistableBaseUri() { return RESOURCE_PERSISTABLE_BASE_URI; }
-
-    @Override
-    protected String getResourcePersistableBaseViewPath() { return RESOURCE_PERSISTABLE_BASE_VIEW_PATH; }
-
-    @Override
-    protected String getResourcePersistableEditViewPath() { return RESOURCE_PERSISTABLE_EDIT_VIEW_PATH; }
-
-    @Override
-    protected String getResourcePersistableFormHolder() { return RESOURCE_PERSISTABLE_FORM_HOLDER; }
-
-    @Override
-    protected String getResourcePersistableSearchFormHolder() { return RESOURCE_PERSISTABLE_SEARCH_FORM_HOLDER; }
-
-    @Override
-    protected String getResourcePersistableListHolder() { return RESOURCE_PERSISTABLE_LIST_HOLDER; }
-
-    @Override
-    @GetMapping(RESOURCE_PERSISTABLE_BASE_URI)
+    @GetMapping("/users")
     public String getResourcePersistableBaseView(Model model) {
         return super.getResourcePersistableBaseView(model);
     }
 
     @Override
-    @PostMapping(RESOURCE_PERSISTABLE_BASE_URI)
-    public String createResourcePersistable(@Valid @ModelAttribute(RESOURCE_PERSISTABLE_FORM_HOLDER) User resourcePersistableForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    @PostMapping("/users")
+    public String createResourcePersistable(@Valid @ModelAttribute("userForm") User resourcePersistableForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         return super.createResourcePersistable(resourcePersistableForm, bindingResult, model, redirectAttributes);
     }
 
@@ -188,15 +266,33 @@ public class UserResourcePersistableController extends ResourcePersistableContro
 
     @Override
     @PostMapping("users/{resourcePersistableId}/edit")
-    public String editResourcePersistable(@PathVariable("resourcePersistableId") Long resourcePersistableId, @Valid @ModelAttribute(RESOURCE_PERSISTABLE_FORM_HOLDER) User resourcePersistableForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String editResourcePersistable(@PathVariable("resourcePersistableId") Long resourcePersistableId, @Valid @ModelAttribute("userForm") User resourcePersistableForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         return super.editResourcePersistable(resourcePersistableId, resourcePersistableForm, bindingResult, model, redirectAttributes);
     }
 
     @Override
     @PostMapping("users/search")
-    public String searchResourcePersistablesBy(@Valid @ModelAttribute(RESOURCE_PERSISTABLE_SEARCH_FORM_HOLDER) User resourcePersistableSearchForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String searchResourcePersistablesBy(@Valid @ModelAttribute("userSearchForm") User resourcePersistableSearchForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
         return super.searchResourcePersistablesBy(resourcePersistableSearchForm, bindingResult, model, redirectAttributes);
     }
+
+    @Override
+    protected String getResourcePersistableBaseUri() { return "/users"; }
+
+    @Override
+    protected String getResourcePersistableBaseViewPath() { return "/user/users"; }
+
+    @Override
+    protected String getResourcePersistableEditViewPath() { return "/user/edit-user"; }
+
+    @Override
+    protected String getResourcePersistableFormHolder() { return "userForm"; }
+
+    @Override
+    protected String getResourcePersistableSearchFormHolder() { return "userSearchForm"; }
+
+    @Override
+    protected String getResourcePersistableListHolder() { return "userList"; }
 
     @Override
     protected User resourcePersistableFormToResourcePersistable(User user) {
@@ -207,7 +303,6 @@ public class UserResourcePersistableController extends ResourcePersistableContro
     protected User resourcePersistableToResourcePersistableForm(User user) {
         return user;
     }
-
 }
 ```
 </details>
